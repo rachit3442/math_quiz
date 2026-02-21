@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Math Quiz Game</title>
+<style>
+body{
+    font-family: Arial;
+    text-align:center;
+    background: linear-gradient(to right, #74ebd5, #ACB6E5);
+}
+.container{
+    background:white;
+    width:400px;
+    margin:50px auto;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px gray;
+}
+h1{
+    color:#333;
+}
+button{
+    padding:10px 20px;
+    margin:10px;
+    font-size:16px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#4CAF50;
+    color:white;
+}
+button:hover{
+    background:#45a049;
+}
+input{
+    padding:10px;
+    font-size:16px;
+    width:100px;
+    text-align:center;
+}
+.score, .timer{
+    font-size:18px;
+    margin:10px;
+}
+.level-btn{
+    background:#ff9800;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎯 Math Quiz Game</h1>
+    
+    <div>
+        <button class="level-btn" onclick="setLevel('easy')">Easy (7-10)</button>
+        <button class="level-btn" onclick="setLevel('medium')">Medium (10-13)</button>
+    </div>
+
+    <h2 id="question">Press Start</h2>
+    <input type="number" id="answer" placeholder="Your Answer">
+    <br>
+    <button onclick="checkAnswer()">Submit</button>
+    <button onclick="startGame()">Start Game</button>
+
+    <div class="score">Score: <span id="score">0</span></div>
+    <div class="timer">Time Left: <span id="time">60</span> sec</div>
+</div>
+
+<script>
+let num1, num2, operator;
+let score = 0;
+let timeLeft = 60;
+let timer;
+let level = "easy";
+
+function setLevel(lvl){
+    level = lvl;
+    alert("Level set to " + lvl);
+}
+
+function generateQuestion(){
+    if(level === "easy"){
+        num1 = Math.floor(Math.random()*20);
+        num2 = Math.floor(Math.random()*20);
+    } else {
+        num1 = Math.floor(Math.random()*100);
+        num2 = Math.floor(Math.random()*100);
+    }
+
+    operator = Math.random() > 0.5 ? "+" : "-";
+    document.getElementById("question").innerText = num1 + " " + operator + " " + num2;
+}
+
+function checkAnswer(){
+    let userAnswer = Number(document.getElementById("answer").value);
+    let correctAnswer;
+
+    if(operator === "+"){
+        correctAnswer = num1 + num2;
+    } else {
+        correctAnswer = num1 - num2;
+    }
+
+    if(userAnswer === correctAnswer){
+        score++;
+        document.getElementById("score").innerText = score;
+    }
+
+    document.getElementById("answer").value = "";
+    generateQuestion();
+}
+
+function startGame(){
+    score = 0;
+    timeLeft = 60;
+    document.getElementById("score").innerText = score;
+    document.getElementById("time").innerText = timeLeft;
+    generateQuestion();
+
+    clearInterval(timer);
+    timer = setInterval(function(){
+        timeLeft--;
+        document.getElementById("time").innerText = timeLeft;
+
+        if(timeLeft <= 0){
+            clearInterval(timer);
+            alert("Game Over! Your Score: " + score);
+            document.getElementById("question").innerText = "Game Over!";
+        }
+    },1000);
+}
+</script>
+
+</body>
+</html>
